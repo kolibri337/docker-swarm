@@ -1,0 +1,40 @@
+services:
+
+  nginx:
+    ports:
+    - "20000:80"
+    image: nginx:alpine
+    volumes:
+    - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+    - voting
+    restart: unless-stopped
+
+  voting:
+    build: .
+    image: voting:latest
+    environment:
+      - DB_HOST=mysql
+      - DB_USERNAME=voting
+      - DB_PASSWORD=voting
+      - DB_DATABASE=voting
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - mysql
+      - redis
+    restart: unless-stopped
+    hostname: voting
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=voting
+      - MYSQL_USER=voting
+      - MYSQL_PASSWORD=voting
+    restart: unless-stopped
+
+  redis:
+   image: redis:alpine
+
