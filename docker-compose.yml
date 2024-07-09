@@ -3,9 +3,10 @@ services:
   nginx:
     ports:
     - "20000:80"
-    image: nginx:alpine
+    image: nginx:stable-alpine
     volumes:
     - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    - ./:/var/www/html/
     depends_on:
     - voting
     restart: unless-stopped
@@ -20,12 +21,12 @@ services:
       - DB_DATABASE=voting
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-    volumes:
-      - ./public:/var/www/html/public
     depends_on:
       - mysql
       - redis
     restart: unless-stopped
+    ports:
+      - "9000:9000"
     hostname: voting
 
   mysql:
@@ -36,7 +37,10 @@ services:
       - MYSQL_USER=voting
       - MYSQL_PASSWORD=voting
     restart: unless-stopped
+    ports:
+      - "3306:3306"
 
   redis:
    image: redis:alpine
-
+   ports:
+      - "6379:6379"
