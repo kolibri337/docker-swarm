@@ -28,6 +28,8 @@ services:
     ports:
       - "9000:9000"
     hostname: voting
+    logging:
+      driver: "fluentd"
 
   mysql:
     image: mysql:5.7
@@ -39,8 +41,41 @@ services:
     restart: unless-stopped
     ports:
       - "3306:3306"
+    logging:
+      driver: "fluentd"
+
 
   redis:
    image: redis:alpine
    ports:
       - "6379:6379"
+   logging:
+      driver: "fluentd"
+
+
+  fluentd:
+    image: fluent/fluentd:v1.17-1
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    volumes:
+      - ./fluentd/fluent.conf:/fluentd/etc/fluent.conf
+    restart: unless-stopped
+
+  elasticsearch:
+    image: elasticsearch:7.17.22
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    restart: unless-stopped
+
+  kibana:
+    image: kibana:7.17.22
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
