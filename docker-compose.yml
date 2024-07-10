@@ -77,7 +77,12 @@ services:
     image: elasticsearch:8.14.2
     environment:
        - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+       - discovery.type=single-node
+       - ELASTIC_PASSWORD=#enter here password
+       - xpack.license.self_generated.type=basic
+       - path.data=/usr/share/elasticsearch/data
        - bootstrap.memory_lock=true
+       
     expose:
       - 9200
     ports:
