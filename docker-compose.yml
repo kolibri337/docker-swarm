@@ -55,27 +55,20 @@ services:
 
   fluentd:
     image: fluent/fluentd:v1.17-1
+    volumes:
+      - ./fluentd/conf:/fluentd/etc
     ports:
       - "24224:24224"
       - "24224:24224/udp"
-    volumes:
-      - ./fluentd/fluent.conf:/fluentd/etc/fluent.conf
-    restart: unless-stopped
 
   elasticsearch:
-    image: elasticsearch:7.17.22
-    environment:
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    image: elasticsearch:8.14.2
+    expose:
+      - 9200
     ports:
       - "9200:9200"
-      - "9300:9300"
-    restart: unless-stopped
 
   kibana:
-    image: kibana:7.17.22
+    image: kibana:8.14.2
     ports:
       - "5601:5601"
-    depends_on:
-      - elasticsearch
-    restart: unless-stopped
