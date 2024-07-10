@@ -8,7 +8,7 @@ RUN docker-php-ext-install pdo pdo_mysql \
     && echo 'redis' >> /usr/src/php-available-exts \
     && docker-php-ext-install redis
 
-COPY . .
+COPY --chown=www-data:www-data . .
 
 RUN composer install
 
