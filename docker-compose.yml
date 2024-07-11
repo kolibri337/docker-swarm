@@ -2,18 +2,19 @@ services:
 
   nginx:
     ports:
-    - "20000:80"
-    image: nginx:stable-alpine
+    - "80:80"
+    image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/nginx:stable-alpine
     volumes:
     - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     - ./:/var/www/html/
     depends_on:
     - voting
     restart: unless-stopped
+    deploy:
+      replicas: 2
 
   voting:
-    build: .
-    image: voting:latest
+    image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/voting:latest
     environment:
       - DB_HOST=mysql
       - DB_USERNAME=voting
@@ -30,7 +31,7 @@ services:
     hostname: voting
 
   mysql:
-    image: mysql:5.7
+    image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/mysql:5.7
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=voting
@@ -41,6 +42,6 @@ services:
       - "3306:3306"
 
   redis:
-   image: redis:alpine
+   image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/redis:alpine
    ports:
       - "6379:6379"
