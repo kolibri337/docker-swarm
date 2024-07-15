@@ -16,7 +16,7 @@ services:
   voting:
     image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/voting:latest
     environment:
-      - DB_HOST=registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/mysql
+      - DB_HOST=registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/mysql:5.7
       - DB_USERNAME=voting
       - DB_PASSWORD=voting
       - DB_DATABASE=voting
