@@ -16,7 +16,7 @@ services:
   voting:
     image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/voting:latest
     environment:
-      - DB_HOST=registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/mysql:5.7
+      - DB_HOST=mysql
       - DB_USERNAME=voting
       - DB_PASSWORD=voting
       - DB_DATABASE=voting
@@ -32,8 +32,12 @@ services:
       - MYSQL_DATABASE=voting
       - MYSQL_USER=voting
       - MYSQL_PASSWORD=voting
+    ports:
+      - 3306:3306
     restart: always
 
   redis:
     image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/redis:alpine
+    ports:
+      - 6379:6379
     restart: always
