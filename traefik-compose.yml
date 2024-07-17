@@ -4,7 +4,7 @@ services:
   traefik:
     image: traefik:v2.8
     command:
-      - --providers.docker.swarmMode
+      - --providers.docker.swarmmode=true
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
       - --certificatesresolvers.myresolver.acme.email=bondar3nko.nikit@yandex.ru
