@@ -2,17 +2,19 @@ version: '3'
 services:
   nginx:
     image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/nginx:stable-alpine
-    ports:
-      - 8080:80
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
       - ./:/var/www/html/
-    depends_on:
-      - voting
     restart: always
     deploy:
-      replicas: 1
-
+      replicas: 1 
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.voting.rule=Host('voting.178.154.201.211.nip.io')
+        - traefik.http.routers.voting.entrypoints=web
+        - traefik.http.routers.voting.service=nginx
+    networks:
+      - proxy
   voting:
     image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/voting:latest
     environment:
@@ -24,7 +26,10 @@ services:
       - mysql
       - redis
     restart: always
-
+    deploy:
+      replicas: 1
+    networks:
+      - proxy
   mysql:
     image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/mysql:5.7
     environment:
@@ -32,12 +37,15 @@ services:
       - MYSQL_DATABASE=voting
       - MYSQL_USER=voting
       - MYSQL_PASSWORD=voting
-    ports:
-      - 3306:3306
     restart: always
-
+    networks:
+      - proxy
   redis:
     image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/redis:alpine
-    ports:
-      - 6379:6379
     restart: always
+    networks:
+      - proxy
+networks:
+  proxy:
+    driver: overlay
+    attachable: true
