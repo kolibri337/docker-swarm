@@ -9,24 +9,13 @@ services:
     networks:
       - proxy
     deploy:
-      replicas: 3
+      replicas: 1
       labels:
         - traefik.enable=true
-        - traefik.http.routers.voting1.rule=Host(`voting.158.160.52.24.nip.io`)
-        - traefik.http.routers.voting1.entrypoints=web
-        - traefik.http.routers.voting1.service=nginx
-        - traefik.http.services.voting1.loadbalancer.server.port=80 
-
-        - traefik.http.routers.voting2.rule=Host(`voting.158.160.125.61.nip.io`)
-        - traefik.http.routers.voting2.entrypoints=web
-        - traefik.http.routers.voting2.service=nginx
-        - traefik.http.services.voting2.loadbalancer.server.port=80
-
-        - traefik.http.routers.voting3.rule=Host(`voting.158.160.120.168.nip.io`)
-        - traefik.http.routers.voting3.entrypoints=web
-        - traefik.http.routers.voting3.service=nginx
-        - traefik.http.services.voting3.loadbalancer.server.port=80
-
+        - traefik.http.routers.voting.rule=Host(`voting.89.169.163.190.nip.io`, `voting.89.169.167.172.nip.io`, `voting.89.169.165.32.nip.io`)
+        - traefik.http.routers.voting.entrypoints=web
+        - traefik.http.routers.voting.service=nginx
+        - traefik.http.services.voting.loadbalancer.server.port=80 
   voting:
     image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/voting:latest
     environment:
@@ -41,6 +30,7 @@ services:
     deploy:
     networks:
       - proxy
+    hostname: voting
 
   mysql:
     image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/mysql:5.7
