@@ -40,16 +40,12 @@ services:
       - MYSQL_USER=voting
       - MYSQL_PASSWORD=voting
     restart: always
-    ports:
-      - "3306:3306"
     networks:
       - proxy
 
   redis:
     image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/redis:alpine
     restart: always
-    ports:
-      - "6379:6379"
     networks:
       - proxy
 
