@@ -12,10 +12,13 @@ services:
       replicas: 1
       labels:
         - traefik.enable=true
-        - traefik.http.routers.voting.rule=Host(`voting.51.250.27.106.nip.io`, `voting.89.169.163.117.nip.io`, `voting.89.169.166.159.nip.io`)
+        - traefik.http.routers.voting.rule=Host(voting.89.169.175.177.nip.io, voting.51.250.102.95.nip.io, voting.89.169.162.189.nip.io)
         - traefik.http.routers.voting.entrypoints=web
-        - traefik.http.routers.voting.service=nginx
-        - traefik.http.services.voting.loadbalancer.server.port=80 
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: nginx.access
   voting:
     image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/voting:latest
     environment:
@@ -28,10 +31,14 @@ services:
       - redis
     restart: always
     deploy:
-    networks:
-      - proxy
-    hostname: voting
-
+      networks:
+        - proxy
+      hostname: voting
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: voting.access
   mysql:
     image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/mysql:5.7
     environment:
@@ -44,12 +51,24 @@ services:
       - /mnt/mysql:/var/lib/mysql
     networks:
       - proxy
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: mysql.access
+
 
   redis:
     image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/redis:alpine
     restart: always
     networks:
       - proxy
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: redis.access
+
 
 networks:
   proxy:

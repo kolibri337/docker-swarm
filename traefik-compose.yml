@@ -10,11 +10,13 @@ services:
       - --certificatesresolvers.myresolver.acme.email=bondar3nko.nikit@yandex.ru
       - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
       - --providers.docker
+      - --api.insecure=true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "80:80"
       - "443:443"
+      - "8080:8080"
     restart: always
     networks:
       - proxy
