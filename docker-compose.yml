@@ -4,21 +4,25 @@ services:
     image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/nginx:stable-alpine
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ./:/var/www/html/
+    depends_on:
+      - voting
     restart: always
-    networks:
-      - proxy
     deploy:
       replicas: 1
+      placement:
+        constraints: [node.role == manager]
       labels:
-        - traefik.enable=true
-        - traefik.http.routers.voting.rule=Host(voting.89.169.175.177.nip.io, voting.51.250.102.95.nip.io, voting.89.169.162.189.nip.io)
-        - traefik.http.routers.voting.entrypoints=web
+        - "traefik.enable=true"
+        - "traefik.http.routers.nginx.rule=Host(voting.89.169.175.177.nip.io, voting.51.250.102.95.nip.io, voting.89.169.162.189.nip.io)"
+        - "traefik.http.services.nginx.entrypoints=web"
+    networks:
+      - proxy
     logging:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
         tag: nginx.access
+
   voting:
     image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/voting:latest
     environment:
@@ -30,15 +34,17 @@ services:
       - mysql
       - redis
     restart: always
+    hostname: voting
     deploy:
-      networks:
-        - proxy
-      hostname: voting
+      replicas: 1
+    networks:
+      - proxy
     logging:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
         tag: voting.access
+
   mysql:
     image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/mysql:5.7
     environment:
@@ -47,8 +53,6 @@ services:
       - MYSQL_USER=voting
       - MYSQL_PASSWORD=voting
     restart: always
-    volumes:
-      - /mnt/mysql:/var/lib/mysql
     networks:
       - proxy
     logging:
@@ -57,10 +61,13 @@ services:
         fluentd-address: localhost:24224
         tag: mysql.access
 
-
   redis:
-    image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/redis:alpine
+    image: registry.rebrainme.com/docker_users_repos/5267/dkr-30-voting/redis:latest
     restart: always
+    labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.redis.rule=Host(voting.89.169.175.177.nip.io)"
+        - "traefik.http.services.redis.entrypoints=web"
     networks:
       - proxy
     logging:
@@ -69,9 +76,7 @@ services:
         fluentd-address: localhost:24224
         tag: redis.access
 
-
 networks:
   proxy:
     driver: overlay
     attachable: true
-

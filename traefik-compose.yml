@@ -20,10 +20,6 @@ services:
     restart: always
     networks:
       - proxy
-    deploy:
-      placement:
-        constraints:
-          - node.role == manager
 
 networks:
   proxy:

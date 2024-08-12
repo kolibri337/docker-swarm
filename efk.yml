@@ -1,8 +1,8 @@
-version: '3.4'
+version: '3'
 
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.2.1
+    image: elasticsearch:7.17.23
     environment:
       - node.name=elasticsearch
       - cluster.name=docker-cluster
@@ -14,10 +14,6 @@ services:
       - /mnt:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
-    deploy:
-      mode: global
-      placement:
-        constraints: [node.role == manager]
     networks:
       - proxy
 
@@ -34,22 +30,17 @@ services:
       - proxy
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:8.2.1
+    image: kibana:7.17.23
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
       - KIBANA_AUTH_TYPE=basic
       - KIBANA_AUTH_REALM=Kibana Realm
       - KIBANA_AUTH_USERNAME=rebrainme
       - KIBANA_AUTH_PASSWORD=DockerRocks!
-    ports:
-      - "80:5601"
-    deploy:
-      mode: global
     labels:
-      - traefik.enable=true
-      - traefik.http.routers.kibana.rule=Host(kibana.89.169.175.177.nip.io)
-      - traefik.http.routers.kibana.entrypoints=web
-      - traefik.http.routers.kibana.service=kibana
+      - "traefik.enable=true"
+      - "traefik.http.routers.kibana.rule=Host(kibana.89.169.175.177.nip.io)"
+      - "traefik.http.services.kibana.entrypoints=web"
     networks:
       - proxy
   
