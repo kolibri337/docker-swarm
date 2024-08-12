@@ -64,10 +64,6 @@ services:
   redis:
     image: registry.rebrainme.com/docker_users_repos/5267/dkr-30-voting/redis:latest
     restart: always
-    labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.redis.rule=Host(voting.89.169.175.177.nip.io)"
-        - "traefik.http.services.redis.entrypoints=web"
     networks:
       - proxy
     logging:
