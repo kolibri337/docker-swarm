@@ -8,12 +8,10 @@ services:
       - voting
     restart: always
     deploy:
-      replicas: 1
-      placement:
-        constraints: [node.role == manager]
+      replicas: 3
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.nginx.rule=Host(voting.89.169.175.177.nip.io, voting.51.250.102.95.nip.io, voting.89.169.162.189.nip.io)"
+        - "traefik.http.routers.nginx.rule=Host(voting.89.169.165.50.nip.io, voting.51.250.104.51.nip.io, voting.89.169.160.185.nip.io)"
         - "traefik.http.services.nginx.entrypoints=web"
     networks:
       - proxy
@@ -62,7 +60,7 @@ services:
         tag: mysql.access
 
   redis:
-    image: registry.rebrainme.com/docker_users_repos/5267/dkr-30-voting/redis:latest
+    image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/redis:alpine
     restart: always
     networks:
       - proxy

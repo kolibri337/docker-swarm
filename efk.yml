@@ -35,7 +35,7 @@ services:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.kibana.rule=Host(kibana.89.169.175.177.nip.io)"
+      - "traefik.http.routers.kibana.rule=Host(kibana.89.169.165.50.nip.io)"
       - "traefik.http.services.kibana.entrypoints=web"
       - "traefik.http.routers.kibana.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=rebrainme:DockerRocks!"
