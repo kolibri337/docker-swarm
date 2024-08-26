@@ -39,6 +39,7 @@ services:
       - "traefik.http.services.kibana.entrypoints=web"
       - "traefik.http.routers.kibana.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=rebrainme:DockerRocks!"
+      - "traefik.http.services.kibana.loadbalancer.server.port=5601"
     networks:
       - proxy
   
