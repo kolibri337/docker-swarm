@@ -36,6 +36,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.kibana.rule=Host(kibana.89.169.175.69.nip.io)"
+      - "traefik.http.routers.kibana.rule=Path(`/`)"
       - "traefik.http.services.kibana.entrypoints=web"
       - "traefik.http.routers.kibana.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=rebrainme:$$2y$$05$$qfiOCByuqvpmlMMQo.zHne0Ik4yVyC0q48LSvsgqBpOYQvIpT0diy"
