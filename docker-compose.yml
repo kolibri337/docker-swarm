@@ -16,7 +16,7 @@ services:
         - "traefik.http.services.nginx.loadbalancer.server.port=80"
         - "traefik.http.routers.nginx.rule=Path(`/`)"
     networks:
-      - proxy
+      - prox
     logging:
       driver: "fluentd"
       options:
@@ -38,7 +38,7 @@ services:
     deploy:
       replicas: 1
     networks:
-      - proxy
+      - prox
     logging:
       driver: "fluentd"
       options:
@@ -54,7 +54,7 @@ services:
       - MYSQL_PASSWORD=voting
     restart: always
     networks:
-      - proxy
+      - prox
     logging:
       driver: "fluentd"
       options:
@@ -65,7 +65,7 @@ services:
     image: registry.rebrainme.com/devops_users_repos/5267/dkr-30-voting/redis:alpine
     restart: always
     networks:
-      - proxy
+      - prox
     logging:
       driver: "fluentd"
       options:
@@ -73,6 +73,6 @@ services:
         tag: redis.access
 
 networks:
-  proxy:
+  prox:
     driver: overlay
     attachable: true

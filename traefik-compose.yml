@@ -6,7 +6,6 @@ services:
     command:
       - --providers.docker.swarmmode=true
       - --entrypoints.web.address=:80
-      - --providers.docker
       - --api.insecure=true
       - --entrypoints.websecure.address=:443
       - --certificatesresolvers.myresolver.acme.email=bondar3nko.nikit@yandex.ru
@@ -22,8 +21,8 @@ services:
       placement:
         constraints: [node.role == manager]
     networks:
-      - proxy
+      - prox
 networks:
-  proxy:
+  prox:
     driver: overlay
     attachable: true

@@ -1,13 +1,13 @@
 version: '3'
-
 services:
   elasticsearch:
-    image: elasticsearch:7.17.23
+    image: elasticsearch:8.15.0
     environment:
       - node.name=elasticsearch
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
-      - xpack.security.enabled=true
+      - xpack.security.enabled=false
+      - discovery.type=single-node
       - discovery.seed_hosts=elasticsearch
       - ES_JAVA_OPTS=-Xms1g -Xmx1g
     volumes:
@@ -15,7 +15,7 @@ services:
     ports:
       - "9200:9200"
     networks:
-      - proxy
+      - prox
 
   fluentd:
     image: fluent/fluentd:v0.12-debian
@@ -27,24 +27,23 @@ services:
       - "24224:24224"
       - "24224:24224/udp"
     networks:
-      - proxy
+      - prox
 
   kibana:
-    image: kibana:7.17.23
+    image: kibana:8.15.0
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
     deploy:
       labels:
-       - "traefik.enable=true"
-       - "traefik.http.routers.kibana.rule=Host(kibana.89.169.175.69.nip.io)"
-       - "traefik.http.routers.kibana.rule=Path(`/`)"
-       - "traefik.http.services.kibana.entrypoints=web"
-       - "traefik.http.routers.kibana.middlewares=auth"
-       - "traefik.http.middlewares.auth.basicauth.users=rebrainme:$$2y$$05$$qfiOCByuqvpmlMMQo.zHne0Ik4yVyC0q48LSvsgqBpOYQvIpT0diy"
-       - "traefik.http.services.kibana.loadbalancer.server.port=5601"
+        - "traefik.enable=true"
+        - "traefik.http.routers.kibana.rule=Host(kibana.89.169.175.69.nip.io)"
+        - "traefik.http.services.kibana.entrypoints=web"
+        - "traefik.http.routers.kibana.middlewares=auth"
+        - "traefik.http.middlewares.auth.basicauth.users=rebrainme:$2y$05$GULcAp5N4VtFT.9Yuk.s/ePoKV./cng1LhzEiWSklplyR5zrq4vZS"
+        - "traefik.http.services.kibana.loadbalancer.server.port=5601"
     networks:
-      - proxy
-  
+      - prox
+
 networks:
   prox:
     driver: overlay
