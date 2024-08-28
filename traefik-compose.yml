@@ -6,11 +6,11 @@ services:
     command:
       - --providers.docker.swarmmode=true
       - --entrypoints.web.address=:80
+      - --providers.docker
+      - --api.insecure=true
       - --entrypoints.websecure.address=:443
       - --certificatesresolvers.myresolver.acme.email=bondar3nko.nikit@yandex.ru
       - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
-      - --providers.docker
-      - --api.insecure=true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
@@ -23,7 +23,6 @@ services:
         constraints: [node.role == manager]
     networks:
       - proxy
-
 networks:
   proxy:
     driver: overlay
